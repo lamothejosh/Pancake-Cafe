@@ -75,7 +75,7 @@ class Window(QMainWindow):
         self.sprinkle_toggle.setStyleSheet("background-color : lightgrey")
         layout.addWidget(self.sprinkle_toggle, 3, 2)
         # NAME INPUT
-        self.name_label = QLabel("Enter your name:")
+        self.name_label = QLabel("                                            Enter your name:")
         font = self.name_label.font()
         font.setPointSize(16)
         self.name_label.setFont(font)
@@ -95,6 +95,7 @@ class Window(QMainWindow):
         # show all the widgets
         self.update()
         self.showMaximized()
+   
     # method called by button
     def changeColor(self):
         # if button is checked
@@ -105,6 +106,7 @@ class Window(QMainWindow):
         else:
             # set background color back to light-grey
             self.cc_toggle.setStyleSheet("background-color : lightgrey")
+   
     # called when confirm order button is clicked
     def confirmOrder(self):
         dlg = QMessageBox(self)
@@ -123,7 +125,8 @@ class Window(QMainWindow):
             # prints out True if each button is pressed
 
             # Airtable API setup
-            AIRTABLE_API_KEY = "Input API Key"
+            #AIRTABLE_API_KEY = "patU8FCP20PtCQfA2.dfb85f807a202bda210de94f1f007cba5486ac9049ba5c3073426889c8d6a16f" old key, not working
+            AIRTABLE_API_KEY = "pat9eVlOP9knFawW5.cfe50b9999314cff7122fc2ec4373338acb96d860b0d43aab09b619733fc1a23"
             AIRTABLE_BASE_ID = "app4CfINDWGkqlxrN"
             AIRTABLE_TABLE_NAME = "Orders"
             url = f"https://api.airtable.com/v0/{AIRTABLE_BASE_ID}/{AIRTABLE_TABLE_NAME}"
@@ -134,12 +137,26 @@ class Window(QMainWindow):
             # Prepare the data
             name = self.name_input.text()  # get the name from the input box
 
+            # Set values to 99 if user does not want the topping
+            cc = 99
+            wc = 99
+            sp = 99
+            if (self.cc_toggle.isChecked()):
+                cc = 0
+            if (self.whipped_toggle.isChecked()):
+                wc = 0
+            if (self.sprinkle_toggle.isChecked()):
+                sp = 0
+
             data = {
             "fields": {
                 "Order Name": name,  # new name field
-                "Chocolate Chips": int(self.cc_toggle.isChecked()),
-                "Whipped Cream": int(self.whipped_toggle.isChecked()),
-                "Sprinkles": int(self.sprinkle_toggle.isChecked())
+                "Cooking 1 Status" : 0,
+                "Cooking 2 Status" : 0,
+                "Whipped Cream Status": wc,
+                "Choco Chips Status": cc,
+                "Sprinkles Status": sp,
+                "Pickup Status" : 0
             }
             }
             # Send to Airtable
